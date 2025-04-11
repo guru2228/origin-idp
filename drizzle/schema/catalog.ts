@@ -1,6 +1,6 @@
 import { pgTable, uuid, text, timestamp, jsonb, pgEnum } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { workspaces } from './index';
+import { workspaces, teams, statusEnum } from './index';
 
 // Platform Catalog
 export const domains = pgTable('domains', {
