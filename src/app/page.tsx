@@ -20,20 +20,20 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-40 w-full border-b backdrop-blur" style={{ backgroundColor: 'hsla(var(--background), 0.95)', backdropFilter: 'blur(4px)' }}>
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-md bg-primary"></div>
+            <div className="h-8 w-8 rounded-md" style={{ backgroundColor: 'hsl(var(--primary))' }}></div>
             <span className="font-bold text-xl">Origin</span>
           </div>
           <nav className="hidden md:flex gap-6">
-            <Link href="#features" className="text-sm font-medium hover:text-primary">
+            <Link href="#features" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Features
             </Link>
-            <Link href="#benefits" className="text-sm font-medium hover:text-primary">
+            <Link href="#benefits" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Benefits
             </Link>
-            <Link href="#testimonials" className="text-sm font-medium hover:text-primary">
+            <Link href="#testimonials" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Testimonials
             </Link>
           </nav>
@@ -50,7 +50,7 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-20 md:py-32 bg-gradient-to-b from-background to-muted">
+        <section className="py-20 md:py-32" style={{ background: 'linear-gradient(to bottom, hsl(var(--background)), hsl(var(--muted)))' }}>
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <div className="space-y-4">
@@ -97,9 +97,9 @@ export default function LandingPage() {
                 transition={{ duration: 0.7, delay: 0.3 }}
                 className="mx-auto w-full max-w-[500px] lg:max-w-none"
               >
-                <div className="aspect-video overflow-hidden rounded-xl border bg-background shadow-xl">
-                  <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background h-full w-full flex items-center justify-center">
-                    <div className="text-primary text-4xl font-bold">Origin IDP</div>
+                <div className="aspect-video overflow-hidden rounded-xl border shadow-xl" style={{ backgroundColor: 'hsl(var(--background))' }}>
+                  <div style={{ background: 'linear-gradient(to bottom right, hsla(var(--primary), 0.2), hsla(var(--primary), 0.1), hsl(var(--background)))', height: '100%', width: '100%' }} className="flex items-center justify-center">
+                    <div style={{ color: 'hsl(var(--primary))' }} className="text-4xl font-bold">Origin IDP</div>
                   </div>
                 </div>
               </motion.div>
@@ -108,7 +108,7 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-background">
+        <section id="features" className="py-20" style={{ backgroundColor: 'hsl(var(--background))' }}>
           <div className="container px-4 md:px-6">
             <div className="text-center space-y-4 mb-12">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -126,8 +126,8 @@ export default function LandingPage() {
                 transition={{ duration: 0.5 }}
                 className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
               >
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Database className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full" style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}>
+                  <Database className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <h3 className="text-xl font-bold">Platform Catalog</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -141,8 +141,8 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
               >
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Cpu className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full" style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}>
+                  <Cpu className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <h3 className="text-xl font-bold">AI Studio</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -156,8 +156,8 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
               >
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Code className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full" style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}>
+                  <Code className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <h3 className="text-xl font-bold">Spectrum AI SDLC</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -171,8 +171,8 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
               >
-                <div className="p-3 rounded-full bg-primary/10">
-                  <BarChart3 className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full" style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}>
+                  <BarChart3 className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <h3 className="text-xl font-bold">Engineering Metrics</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -186,8 +186,8 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
               >
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Shield className="h-6 w-6 text-primary" />
+                <div className="p-3 rounded-full" style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}>
+                  <Shield className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <h3 className="text-xl font-bold">Multi-Tenant Security</h3>
                 <p className="text-gray-500 dark:text-gray-400">
@@ -199,7 +199,7 @@ export default function LandingPage() {
         </section>
 
         {/* Benefits Section */}
-        <section id="benefits" className="py-20 bg-muted">
+        <section id="benefits" className="py-20" style={{ backgroundColor: 'hsl(var(--muted))' }}>
           <div className="container px-4 md:px-6">
             <div className="text-center space-y-4 mb-12">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -243,9 +243,9 @@ export default function LandingPage() {
                 transition={{ duration: 0.7 }}
                 className="mx-auto w-full max-w-[500px] lg:max-w-none"
               >
-                <div className="aspect-square overflow-hidden rounded-xl border bg-background shadow-xl">
-                  <div className="bg-gradient-to-br from-primary/20 via-primary/10 to-background h-full w-full flex items-center justify-center">
-                    <div className="text-primary text-4xl font-bold">AI-Powered</div>
+                <div className="aspect-square overflow-hidden rounded-xl border shadow-xl" style={{ backgroundColor: 'hsl(var(--background))' }}>
+                  <div style={{ background: 'linear-gradient(to bottom right, hsla(var(--primary), 0.2), hsla(var(--primary), 0.1), hsl(var(--background)))', height: '100%', width: '100%' }} className="flex items-center justify-center">
+                    <div style={{ color: 'hsl(var(--primary))' }} className="text-4xl font-bold">AI-Powered</div>
                   </div>
                 </div>
               </motion.div>
@@ -254,7 +254,7 @@ export default function LandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-background">
+        <section className="py-20" style={{ backgroundColor: 'hsl(var(--background))' }}>
           <div className="container px-4 md:px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -296,13 +296,13 @@ export default function LandingPage() {
             © 2025 Origin. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Terms
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Privacy
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary">
+            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
               Contact
             </Link>
           </div>

@@ -75,15 +75,17 @@ export default function Sidebar({ children }: SidebarProps) {
       </Button>
 
       <div
-        className={`sidebar fixed top-0 left-0 h-full bg-background border-r z-40 transition-all duration-300 ${
+        className={`sidebar fixed top-0 left-0 h-full border-r z-40 transition-all duration-300 ${
           isMobile ? (isMobileOpen ? "open" : "") : ""
         }`}
+        style={{ backgroundColor: 'hsl(var(--background))' }}
       >
         {!isMobile && (
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-[-12px] h-6 w-6 rounded-full border bg-background z-10"
+            className="absolute top-4 right-[-12px] h-6 w-6 rounded-full border z-10"
+            style={{ backgroundColor: 'hsl(var(--background))' }}
             onClick={toggleSidebar}
           >
             {sidebarMode === "expanded" ? (

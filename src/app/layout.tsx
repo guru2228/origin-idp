@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/layout/theme-provider";
-import "../globals.css";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
