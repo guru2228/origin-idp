@@ -22,10 +22,15 @@ services:
       - "3000:3000"
     depends_on:
       - db
+    env_file:
+      - .env.local
     environment:
       - DATABASE_URL=postgres://origin_admin:origin_password@db:5432/origin_db
       - NEXTAUTH_URL=http://localhost:3000
-      - NEXTAUTH_SECRET=your-nextauth-secret-key-here
+      - NEXTAUTH_SECRET=this-is-a-secret-value-for-local-development
+      - ENABLE_AI_FEATURES=true
+      - ENABLE_METRICS_DASHBOARD=true
+      - LOG_LEVEL=debug
     volumes:
       - .:/app
       - /app/node_modules
