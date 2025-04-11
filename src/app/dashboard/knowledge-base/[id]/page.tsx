@@ -24,7 +24,7 @@ export default function KnowledgeBaseDetailPage() {
     id,
     name: "Platform Documentation",
     description: "Official documentation for the Origin platform",
-    documents: 156,
+    documentCount: 156,
     owner: "Platform Team",
     updated: "2025-04-01T00:00:00.000Z",
     created: "2024-10-15T00:00:00.000Z",
@@ -87,8 +87,19 @@ export default function KnowledgeBaseDetailPage() {
     ],
   };
 
+  // Define document type interface
+  interface Document {
+    id: string;
+    title: string;
+    category: string;
+    author: string;
+    updated: string;
+    tags: string[];
+    [key: string]: any;
+  }
+
   // Filter functions
-  const filterDocuments = (documents, query) => {
+  const filterDocuments = (documents: Document[], query: string): Document[] => {
     if (!query) return documents;
     return documents.filter(doc => 
       doc.title.toLowerCase().includes(query.toLowerCase()) || 
@@ -144,7 +155,7 @@ export default function KnowledgeBaseDetailPage() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{knowledgeBase.documents.length}</div>
+              <div className="text-2xl font-bold">{knowledgeBase.documentCount}</div>
             </CardContent>
           </Card>
         </motion.div>

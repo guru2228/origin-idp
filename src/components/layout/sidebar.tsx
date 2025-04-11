@@ -6,7 +6,7 @@ import { useTheme } from "@/components/layout/theme-provider";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface SidebarProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export default function Sidebar({ children }: SidebarProps) {

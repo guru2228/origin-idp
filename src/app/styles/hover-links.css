@@ -1,0 +1,3 @@
+.hover-link:hover {
+  color: hsl(var(--primary));
+}

@@ -94,8 +94,20 @@ export default function SubscriptionsPage() {
     },
   ];
 
+  // Define tenant item type interface
+  interface TenantItem {
+    id: string;
+    name: string;
+    plan: string;
+    users: number;
+    status: string;
+    billingCycle: string;
+    nextBilling: string;
+    features: string[];
+  }
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: TenantItem[], query: string): TenantItem[] => {
     if (!query) return items;
     return items.filter(item => 
       item.name.toLowerCase().includes(query.toLowerCase()) || 
@@ -106,7 +118,7 @@ export default function SubscriptionsPage() {
   const filteredTenants = filterItems(tenants, searchQuery);
 
   // Helper function to get status badge
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
         return <span className="text-xs bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full">Active</span>;
@@ -336,7 +348,7 @@ export default function SubscriptionsPage() {
 }
 
 // Check component for feature lists
-function Check(props) {
+function Check(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

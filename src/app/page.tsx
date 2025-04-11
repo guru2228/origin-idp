@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code, Database, BarChart3, Cpu, Shield } from "lucide-react";
 
+import "./styles/hover-links.css";
+
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
 
@@ -27,13 +29,13 @@ export default function LandingPage() {
             <span className="font-bold text-xl">Origin</span>
           </div>
           <nav className="hidden md:flex gap-6">
-            <Link href="#features" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#features" className="text-sm font-medium hover-link">
               Features
             </Link>
-            <Link href="#benefits" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#benefits" className="text-sm font-medium hover-link">
               Benefits
             </Link>
-            <Link href="#testimonials" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#testimonials" className="text-sm font-medium hover-link">
               Testimonials
             </Link>
           </nav>
@@ -296,13 +298,13 @@ export default function LandingPage() {
             © 2025 Origin. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#" className="text-sm font-medium hover-link">
               Terms
             </Link>
-            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#" className="text-sm font-medium hover-link">
               Privacy
             </Link>
-            <Link href="#" className="text-sm font-medium" style={{ ":hover": { color: "hsl(var(--primary))" } }}>
+            <Link href="#" className="text-sm font-medium hover-link">
               Contact
             </Link>
           </div>

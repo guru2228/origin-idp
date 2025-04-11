@@ -97,8 +97,16 @@ export default function SpectrumPage() {
     },
   ];
 
+  // Define agent item type interface
+  interface AgentItem {
+    id: string;
+    name: string;
+    description: string;
+    status: string;
+  }
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: AgentItem[], query: string): AgentItem[] => {
     if (!query) return items;
     return items.filter(item => 
       item.name.toLowerCase().includes(query.toLowerCase()) || 

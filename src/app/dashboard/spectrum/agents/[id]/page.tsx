@@ -67,7 +67,7 @@ Context: You have access to the company's code repositories and documentation.`,
   };
 
   // Get the appropriate icon based on agent type
-  const getAgentIcon = (type) => {
+  const getAgentIcon = (type: string) => {
     switch (type) {
       case "planning":
         return <Lightbulb className="h-4 w-4 text-muted-foreground" />;

@@ -51,7 +51,7 @@ export default function RoleDetailPage() {
   });
 
   // Toggle permission
-  const togglePermission = (permId) => {
+  const togglePermission = (permId: string) => {
     if (!isEditing) return;
     
     setEditedRole(prev => ({
@@ -224,7 +224,7 @@ export default function RoleDetailPage() {
                                 <td className="px-4 py-4 text-sm">{permission.name}</td>
                                 <td className="px-4 py-4 text-sm text-right">
                                   {isEditing ? (
-                                    editedRole.permissions.find(p => p.id === permission.id).granted ? (
+                                    editedRole.permissions.find(p => p.id === permission.id)?.granted ? (
                                       <span className="inline-flex items-center text-green-500">
                                         <Check className="h-4 w-4 mr-1" />
                                         Granted

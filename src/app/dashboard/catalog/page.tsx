@@ -179,8 +179,15 @@ export default function CatalogPage() {
     },
   ];
 
+  // Define item type interface
+  interface Item {
+    name: string;
+    description: string;
+    [key: string]: any;
+  }
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: Item[], query: string): Item[] => {
     if (!query) return items;
     return items.filter(item => 
       item.name.toLowerCase().includes(query.toLowerCase()) || 
