@@ -50,7 +50,7 @@ export default function ReleaseDetailPage() {
   };
 
   // Helper function to get status badge
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "scheduled":
         return <span className="text-xs bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full">Scheduled</span>;
@@ -69,7 +69,7 @@ export default function ReleaseDetailPage() {
     }
   };
 
-  const updateReleaseStatus = (newStatus) => {
+  const updateReleaseStatus = (newStatus: string) => {
     setReleaseStatus(newStatus);
   };
 

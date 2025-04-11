@@ -24,7 +24,7 @@ export default function TenantDetailPage() {
     id,
     name: "Origin Inc.",
     plan: "Enterprise",
-    users: 25,
+    userCount: 25,
     status: "active",
     billingCycle: "annual",
     nextBilling: "2025-12-15T00:00:00.000Z",
@@ -56,7 +56,7 @@ export default function TenantDetailPage() {
   };
 
   // Helper function to get status badge
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
         return <span className="text-xs bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full">Active</span>;

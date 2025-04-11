@@ -92,22 +92,43 @@ export default function UsersPage() {
     },
   ];
 
+  // Define user item type interface
+  interface UserItem {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    lastActive: string;
+    tenant: string;
+  }
+
+  interface RoleItem {
+    id: string;
+    name: string;
+    description: string;
+    users: number;
+    permissions: number;
+  }
+
+  type Item = UserItem | RoleItem;
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: Item[], query: string): Item[] => {
     if (!query) return items;
     return items.filter(item => 
       item.name.toLowerCase().includes(query.toLowerCase()) || 
-      (item.email && item.email.toLowerCase().includes(query.toLowerCase())) ||
-      (item.role && item.role.toLowerCase().includes(query.toLowerCase())) ||
-      (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
+      ('email' in item && item.email.toLowerCase().includes(query.toLowerCase())) ||
+      ('role' in item && item.role.toLowerCase().includes(query.toLowerCase())) ||
+      ('description' in item && item.description.toLowerCase().includes(query.toLowerCase()))
     );
   };
 
-  const filteredUsers = filterItems(users, searchQuery);
-  const filteredRoles = filterItems(roles, searchQuery);
+  const filteredUsers = filterItems(users as UserItem[], searchQuery) as UserItem[];
+  const filteredRoles = filterItems(roles as RoleItem[], searchQuery) as RoleItem[];
 
   // Helper function to get status badge
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
         return <span className="text-xs bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full">Active</span>;

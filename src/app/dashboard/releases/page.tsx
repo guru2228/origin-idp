@@ -79,8 +79,20 @@ export default function ReleasesPage() {
     },
   ];
 
+  // Define item type interface
+  interface ReleaseItem {
+    id: string;
+    name: string;
+    description: string;
+    status: string;
+    date: string;
+    owner: string;
+    components: number;
+    changes: number;
+  }
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: ReleaseItem[], query: string): ReleaseItem[] => {
     if (!query) return items;
     return items.filter(item => 
       item.name.toLowerCase().includes(query.toLowerCase()) || 
@@ -93,7 +105,7 @@ export default function ReleasesPage() {
   const filteredPastReleases = filterItems(pastReleases, searchQuery);
 
   // Helper function to get status badge
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "scheduled":
         return <span className="text-xs bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full">Scheduled</span>;

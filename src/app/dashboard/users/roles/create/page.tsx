@@ -50,14 +50,27 @@ export default function CreateRolePage() {
     },
   ];
   
-  const [permissions, setPermissions] = useState(
-    permissionCategories.reduce((acc, category) => {
+  // Define permission type
+  interface Permission {
+    id: string;
+    name: string;
+    granted: boolean;
+  }
+
+  // Define permission category type
+  interface PermissionCategory {
+    name: string;
+    permissions: Permission[];
+  }
+  
+  const [permissions, setPermissions] = useState<Permission[]>(
+    permissionCategories.reduce<Permission[]>((acc, category) => {
       return [...acc, ...category.permissions];
     }, [])
   );
 
   // Toggle permission
-  const togglePermission = (permId) => {
+  const togglePermission = (permId: string) => {
     setPermissions(prev => 
       prev.map(perm => 
         perm.id === permId ? { ...perm, granted: !perm.granted } : perm
@@ -66,7 +79,7 @@ export default function CreateRolePage() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // In a real implementation, this would save to the database
     router.push("/dashboard/users");
@@ -158,7 +171,7 @@ export default function CreateRolePage() {
                                 <div className="flex items-center justify-end">
                                   <input 
                                     type="checkbox" 
-                                    checked={currentPerm.granted}
+                                    checked={currentPerm?.granted || false}
                                     onChange={() => togglePermission(permission.id)}
                                     className="h-4 w-4"
                                   />

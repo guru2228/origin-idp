@@ -9,7 +9,12 @@ import { motion } from "framer-motion";
 import { BarChart3, LineChart, PieChart, Activity, Calendar, Download, Filter } from "lucide-react";
 
 // Mock chart component - in a real implementation, we would use a charting library like Recharts
-const MockChart = ({ type, height = 300 }) => {
+interface MockChartProps {
+  type: 'bar' | 'line' | 'pie' | 'activity';
+  height?: number;
+}
+
+const MockChart = ({ type, height = 300 }: MockChartProps) => {
   return (
     <div 
       className={`w-full h-[${height}px] bg-muted/20 rounded-md flex flex-col items-center justify-center`}

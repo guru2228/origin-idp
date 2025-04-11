@@ -83,8 +83,18 @@ export default function KnowledgeBasePage() {
     },
   ];
 
+  // Define item type interface
+  interface Item {
+    name?: string;
+    description?: string;
+    title?: string;
+    knowledgeBase?: string;
+    tags?: string[];
+    [key: string]: any;
+  }
+
   // Filter functions
-  const filterItems = (items, query) => {
+  const filterItems = (items: Item[], query: string): Item[] => {
     if (!query) return items;
     return items.filter(item => 
       (item.name && item.name.toLowerCase().includes(query.toLowerCase())) || 
@@ -311,7 +321,7 @@ export default function KnowledgeBasePage() {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-1">
-                          {doc.tags.map(tag => (
+                          {doc.tags && doc.tags.map(tag => (
                             <span 
                               key={tag} 
                               className="text-xs bg-muted px-2 py-0.5 rounded-full"

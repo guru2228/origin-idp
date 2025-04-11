@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleGuard } from "@/components/auth/role-guard";
 import { motion } from "framer-motion";
-import { Database, Server, Code, Edit, Trash2, ArrowLeft, BrainCircuit, Workflow, Play, Pause, RefreshCw } from "lucide-react";
+import { Database, Server, Code, Edit, Trash2, ArrowLeft, BrainCircuit, Workflow, Play, Pause, RefreshCw, BarChart } from "lucide-react";
 import Link from "next/link";
 
 export default function AgentDetailPage() {
@@ -415,7 +415,7 @@ Context: You have access to the company's code repositories and documentation.`,
               <CardContent className="h-[300px] flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-full h-[250px] bg-muted/20 rounded-md flex flex-col items-center justify-center">
-                    <LineChart className="h-16 w-16 text-muted mb-2" />
+                    <BarChart className="h-16 w-16 text-muted mb-2" />
                     <div className="text-sm text-muted-foreground">
                       Usage Chart
                     </div>

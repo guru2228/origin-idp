@@ -19,7 +19,7 @@ export default function CreateTenantPage() {
   const [billingCycle, setBillingCycle] = useState("monthly");
   
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // In a real implementation, this would save to the database
     router.push("/dashboard/subscriptions");

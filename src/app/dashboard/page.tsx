@@ -326,7 +326,7 @@ export default function ConfigurableDashboard() {
   };
 
   // Handle drag start
-  const handleDragStart = (e: React.DragEvent, widgetId: string) => {
+  const handleDragStart = (e: React.DragEvent<Element>, widgetId: string) => {
     if (!isEditMode) return;
     setIsDragging(true);
     setDraggedWidget(widgetId);
@@ -346,13 +346,13 @@ export default function ConfigurableDashboard() {
   };
 
   // Handle drag over
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent<Element>) => {
     if (!isEditMode) return;
     e.preventDefault();
   };
 
   // Handle drop
-  const handleDrop = (e: React.DragEvent, targetWidgetId: string) => {
+  const handleDrop = (e: React.DragEvent<Element>, targetWidgetId: string) => {
     if (!isEditMode || !draggedWidget) return;
     e.preventDefault();
     
@@ -509,9 +509,9 @@ export default function ConfigurableDashboard() {
             layout={animationsEnabled}
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
             draggable={isEditMode}
-            onDragStart={(e) => handleDragStart(e, widget.id)}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, widget.id)}
+            onDragStart={(e: any) => handleDragStart(e as React.DragEvent<Element>, widget.id)}
+            onDragOver={(e: any) => handleDragOver(e as React.DragEvent<Element>)}
+            onDrop={(e: any) => handleDrop(e as React.DragEvent<Element>, widget.id)}
             onDragEnd={handleDragEnd}
           >
             <Card className={`h-full ${isDragging && draggedWidget === widget.id ? "border-dashed border-primary" : ""}`}>

@@ -26,7 +26,7 @@ export default function CreateDocumentPage() {
     { id: "cat-5", name: "Metrics Dashboard" },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // In a real implementation, this would save the document to the database
     // and generate vector embeddings for semantic search
