@@ -1,0 +1,247 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom CSS for responsive design and content density */
+:root {
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 80px;
+  --header-height: 64px;
+  --content-padding: 24px;
+}
+
+/* Font size customization */
+[data-font-size="small"] {
+  font-size: 0.875rem;
+}
+
+[data-font-size="medium"] {
+  font-size: 1rem;
+}
+
+[data-font-size="large"] {
+  font-size: 1.125rem;
+}
+
+/* Content density customization */
+[data-density="compact"] .card,
+[data-density="compact"] .input,
+[data-density="compact"] .button,
+[data-density="compact"] .select,
+[data-density="compact"] .table td,
+[data-density="compact"] .table th {
+  padding: 0.5rem;
+}
+
+[data-density="comfortable"] .card,
+[data-density="comfortable"] .input,
+[data-density="comfortable"] .button,
+[data-density="comfortable"] .select,
+[data-density="comfortable"] .table td,
+[data-density="comfortable"] .table th {
+  padding: 0.75rem;
+}
+
+[data-density="spacious"] .card,
+[data-density="spacious"] .input,
+[data-density="spacious"] .button,
+[data-density="spacious"] .select,
+[data-density="spacious"] .table td,
+[data-density="spacious"] .table th {
+  padding: 1rem;
+}
+
+/* Sidebar mode customization */
+[data-sidebar="expanded"] .sidebar {
+  width: var(--sidebar-width);
+}
+
+[data-sidebar="collapsed"] .sidebar {
+  width: var(--sidebar-width-collapsed);
+}
+
+[data-sidebar="expanded"] .main-content {
+  margin-left: var(--sidebar-width);
+}
+
+[data-sidebar="collapsed"] .main-content {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+/* Animation customization */
+[data-animations="disabled"] * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+    --content-padding: 16px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 0;
+    --header-height: 56px;
+    --content-padding: 12px;
+  }
+  
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    z-index: 50;
+    transition: left 0.3s ease;
+  }
+  
+  .sidebar.open {
+    left: 0;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --content-padding: 8px;
+  }
+  
+  .xs-stack > * {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .xs-stack > *:last-child {
+    margin-bottom: 0;
+  }
+  
+  .xs-full-width {
+    width: 100% !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .header,
+  .no-print {
+    display: none !important;
+  }
+  
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  body {
+    background: white;
+  }
+}
