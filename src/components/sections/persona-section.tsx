@@ -1,7 +1,8 @@
-import { useState } from "react";
-import Link from "next/link";
+"use client";
+
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function PersonaSection() {
   const [activePersona, setActivePersona] = useState(0);
@@ -215,5 +216,16 @@ export default function PersonaSection() {
         </motion.div>
       </div>
     </section>
+  );
+}
+
+// Button component for use in this file
+function Button({ children, className = "" }) {
+  return (
+    <button 
+      className={`inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 ${className}`}
+    >
+      {children}
+    </button>
   );
 }
