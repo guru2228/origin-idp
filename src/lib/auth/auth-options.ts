@@ -1,12 +1,7 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { NextAuthOptions } from "next-auth";
-import { db } from "@/drizzle/db";
-import { eq } from "drizzle-orm";
-import { users } from "@/drizzle/schema";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
-  adapter: DrizzleAdapter(db),
   session: {
     strategy: "jwt",
   },

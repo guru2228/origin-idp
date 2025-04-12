@@ -1,319 +1,218 @@
-"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { AnimatedCard, AnimatedCardContent, AnimatedCardBackground } from "@/components/ui/animated-card";
-import { Users, Code, Database, BarChart3, Cpu, Shield, Zap, Star } from "lucide-react";
-
-interface Persona {
-  id: string;
-  name: string;
-  role: string;
-  description: string;
-  icon: React.ElementType;
-  color: string;
-  benefits: string[];
-}
-
-export function PersonaSection() {
-  const [activePersona, setActivePersona] = useState<string>("developer");
-  const [isMounted, setIsMounted] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
+export default function PersonaSection() {
+  const [activePersona, setActivePersona] = useState(0);
   
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const personas: Persona[] = [
+  const personas = [
     {
-      id: "developer",
-      name: "Developer",
-      role: "Software Engineer",
-      description: "Build and deploy applications faster with AI-powered assistance and streamlined workflows.",
-      icon: Code,
-      color: "from-blue-500 to-cyan-400",
-      benefits: [
-        "AI-powered code generation and review",
-        "Automated testing and debugging",
-        "Streamlined deployment pipelines",
-        "Integrated knowledge base access"
-      ]
+      title: "Developer",
+      description: "Build and deploy faster with integrated tools and AI assistance",
+      features: [
+        "AI-powered code generation",
+        "Integrated CI/CD pipelines",
+        "Component library access",
+        "Automated testing tools",
+        "Performance monitoring"
+      ],
+      icon: "👨‍💻"
     },
     {
-      id: "architect",
-      name: "Architect",
-      role: "System Designer",
-      description: "Design scalable, maintainable systems with comprehensive visualization and documentation tools.",
-      icon: Database,
-      color: "from-purple-500 to-indigo-400",
-      benefits: [
-        "System visualization and modeling",
-        "Automated architecture validation",
-        "Component catalog management",
-        "Technical debt tracking"
-      ]
+      title: "Designer",
+      description: "Create beautiful interfaces with powerful design tools",
+      features: [
+        "Design system management",
+        "Component prototyping",
+        "Collaboration tools",
+        "Version control for designs",
+        "Design-to-code conversion"
+      ],
+      icon: "🎨"
     },
     {
-      id: "manager",
-      name: "Manager",
-      role: "Team Lead",
-      description: "Track team performance, manage resources, and optimize workflows with real-time metrics.",
-      icon: BarChart3,
-      color: "from-green-500 to-emerald-400",
-      benefits: [
-        "Real-time team performance metrics",
-        "Resource allocation optimization",
-        "Automated progress reporting",
-        "Bottleneck identification"
-      ]
-    },
-    {
-      id: "devops",
-      name: "DevOps",
-      role: "Infrastructure Engineer",
-      description: "Automate infrastructure management and optimize deployment pipelines for reliability and speed.",
-      icon: Cpu,
-      color: "from-orange-500 to-amber-400",
-      benefits: [
-        "Infrastructure as code generation",
-        "Automated scaling and optimization",
-        "Performance monitoring and alerts",
-        "Security compliance automation"
-      ]
+      title: "Product Manager",
+      description: "Manage your product roadmap and track progress efficiently",
+      features: [
+        "Feature planning tools",
+        "Sprint management",
+        "Analytics dashboard",
+        "User feedback collection",
+        "Release management"
+      ],
+      icon: "📊"
     }
   ];
-
-  const getPersona = (id: string) => personas.find(p => p.id === id) || personas[0];
-  const currentPersona = getPersona(activePersona);
-
-  if (!isMounted) return null;
-
+  
+  const handlePersonaChange = (index: number) => {
+    setActivePersona(index);
+  };
+  
   return (
-    <section 
-      id="personas" 
-      ref={sectionRef}
-      className="py-20 relative overflow-hidden"
-      style={{ backgroundColor: 'hsl(var(--background))' }}
-    >
-      {/* Background elements */}
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-b from-primary/5 to-transparent rounded-full blur-3xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isInView ? 0.6 : 0 }}
-          transition={{ duration: 1 }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-t from-primary/5 to-transparent rounded-full blur-3xl"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isInView ? 0.6 : 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-        />
-      </div>
-
-      <div className="container px-4 md:px-6 relative z-10">
-        <div className="text-center space-y-4 mb-12">
+    <section id="personas" className="py-20 bg-background">
+      <div className="container px-4 md:px-6">
+        <div className="text-center mb-12">
           <motion.h2 
-            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-            transition={{ duration: 0.5 }}
+            className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ 
+              type: "spring",
+              stiffness: 100,
+              damping: 20
+            }}
           >
             Built for Every Team Member
           </motion.h2>
           <motion.p 
-            className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-4 text-muted-foreground md:text-xl max-w-[700px] mx-auto"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ 
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              delay: 0.1
+            }}
           >
-            Origin adapts to different roles and needs, providing tailored experiences for everyone on your team.
+            Discover how Origin IDP empowers different roles in your organization
           </motion.p>
         </div>
-
-        {/* Persona selector */}
+        
         <motion.div 
-          className="flex flex-wrap justify-center gap-3 mb-12"
+          className="flex justify-center mb-10 space-x-4"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
         >
-          {personas.map((persona, index) => (
-            <motion.button
-              key={persona.id}
-              className={cn(
-                "px-4 py-2 rounded-full flex items-center gap-2 transition-all",
-                activePersona === persona.id 
-                  ? "bg-primary text-primary-foreground shadow-lg" 
-                  : "bg-muted hover:bg-muted/80"
-              )}
-              onClick={() => setActivePersona(persona.id)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: isInView ? 1 : 0, x: isInView ? 0 : -20 }}
-              transition={{ duration: 0.3, delay: 0.3 + (index * 0.1) }}
+          {personas.map((persona, i) => (
+            <button
+              key={i}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activePersona === i 
+                  ? "bg-primary text-primary-foreground shadow-sm" 
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+              onClick={() => handlePersonaChange(i)}
             >
-              <persona.icon className="h-4 w-4" />
-              <span>{persona.name}</span>
-            </motion.button>
+              <span className="mr-2">{persona.icon}</span>
+              {persona.title}
+            </button>
           ))}
         </motion.div>
-
-        {/* Persona content */}
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activePersona}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="space-y-6"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 rounded-full bg-gradient-to-r ${currentPersona.color}`}>
-                    <currentPersona.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold">{currentPersona.name}</h3>
+        
+        <motion.div
+          key={activePersona}
+          className="bg-card border rounded-lg p-8 shadow-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 100,
+            damping: 20
+          }}
+        >
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <div className="mb-6">
+                <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
+                  <span className="text-4xl">{personas[activePersona].icon}</span>
                 </div>
-                <p className="text-muted-foreground">{currentPersona.role}</p>
-                <p className="text-xl">{currentPersona.description}</p>
+                <h3 className="text-2xl font-bold mb-2">{personas[activePersona].title}</h3>
+                <p className="text-muted-foreground">{personas[activePersona].description}</p>
               </div>
               
-              <div className="space-y-4">
-                <h4 className="font-semibold">Key Benefits</h4>
-                <ul className="space-y-3">
-                  {currentPersona.benefits.map((benefit, index) => (
-                    <motion.li 
-                      key={index}
-                      className="flex items-start gap-2"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <div className="mt-1 text-primary">
-                        <Star className="h-4 w-4" />
-                      </div>
-                      <span>{benefit}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          <AnimatedCard 
-            depth={1.5}
-            hoverScale={1.05}
-            className="aspect-square max-w-[500px] mx-auto"
-          >
-            {(mousePosition, isHovered) => (
-              <>
-                <AnimatedCardBackground>
-                  <div className={`absolute inset-0 bg-gradient-to-br ${currentPersona.color}/10`} />
-                  
-                  {/* Animated background elements */}
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className={`absolute rounded-full bg-gradient-to-r ${currentPersona.color}/20`}
-                      style={{
-                        width: `${Math.random() * 100 + 50}px`,
-                        height: `${Math.random() * 100 + 50}px`,
-                        left: `${Math.random() * 80 + 10}%`,
-                        top: `${Math.random() * 80 + 10}%`,
-                        opacity: 0.3,
-                      }}
-                      animate={{ 
-                        x: [0, Math.random() * 30 - 15, 0],
-                        y: [0, Math.random() * 30 - 15, 0],
-                        scale: [1, Math.random() * 0.3 + 0.9, 1],
-                      }}
-                      transition={{ 
-                        duration: Math.random() * 5 + 5,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                      }}
-                    />
-                  ))}
-                </AnimatedCardBackground>
-                
-                <AnimatedCardContent className="h-full flex flex-col items-center justify-center p-6">
+              <ul className="space-y-3 mb-6">
+                {personas[activePersona].features.map((feature, j) => (
+                  <motion.li 
+                    key={j}
+                    className="flex items-start gap-2"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + (j * 0.1) }}
+                  >
+                    <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                      <svg className="h-3 w-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span>{feature}</span>
+                  </motion.li>
+                ))}
+              </ul>
+              
+              <Link href="/auth/login">
+                <Button>Get Started</Button>
+              </Link>
+            </div>
+            
+            <div className="relative">
+              <motion.div
+                className="bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg aspect-video flex items-center justify-center overflow-hidden"
+                animate={{ 
+                  boxShadow: ["0px 0px 0px rgba(0,0,0,0)", "0px 10px 30px rgba(0,0,0,0.1)", "0px 0px 0px rgba(0,0,0,0)"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {/* Animated elements */}
                   <motion.div 
-                    className="relative"
+                    className="absolute w-20 h-20 bg-primary/10 rounded-full"
                     animate={{ 
-                      y: [0, -10, 0],
+                      scale: [1, 1.2, 1],
+                      x: [0, 30, 0],
+                      y: [0, -30, 0],
                     }}
-                    transition={{ 
-                      duration: 3,
+                    transition={{
+                      duration: 8,
                       repeat: Infinity,
-                      repeatType: "reverse",
+                      repeatType: "reverse"
                     }}
-                  >
-                    <motion.div 
-                      className={`p-6 rounded-full bg-gradient-to-r ${currentPersona.color} shadow-lg`}
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                      <currentPersona.icon className="h-12 w-12 text-white" />
-                    </motion.div>
-                    
-                    {/* Orbiting elements */}
-                    {[...Array(3)].map((_, i) => {
-                      const angle = (i * 120) + (Date.now() / 2000);
-                      const radius = 70;
-                      const x = Math.cos(angle) * radius;
-                      const y = Math.sin(angle) * radius;
-                      
-                      return (
-                        <motion.div
-                          key={i}
-                          className="absolute w-10 h-10 rounded-full bg-background shadow-md flex items-center justify-center"
-                          style={{
-                            x, 
-                            y,
-                            zIndex: y > 0 ? -1 : 1,
-                          }}
-                          animate={{
-                            x: [x, Math.cos(angle + 2 * Math.PI/3) * radius, Math.cos(angle + 4 * Math.PI/3) * radius, x],
-                            y: [y, Math.sin(angle + 2 * Math.PI/3) * radius, Math.sin(angle + 4 * Math.PI/3) * radius, y],
-                          }}
-                          transition={{
-                            duration: 10,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                        >
-                          {i === 0 ? <Zap className="h-5 w-5 text-primary" /> : 
-                           i === 1 ? <Shield className="h-5 w-5 text-primary" /> :
-                           <Users className="h-5 w-5 text-primary" />}
-                        </motion.div>
-                      );
-                    })}
-                  </motion.div>
-                  
+                  />
                   <motion.div 
-                    className="mt-8 text-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <h3 className={`text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${currentPersona.color}`}>
-                      {currentPersona.role}
-                    </h3>
-                    <p className="mt-2 text-muted-foreground">
-                      Optimized workflow for {currentPersona.name.toLowerCase()}s
-                    </p>
-                  </motion.div>
-                </AnimatedCardContent>
-              </>
-            )}
-          </AnimatedCard>
-        </div>
+                    className="absolute w-16 h-16 bg-secondary/10 rounded-full"
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      x: [0, -40, 0],
+                      y: [0, 40, 0],
+                    }}
+                    transition={{
+                      duration: 10,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  />
+                  <motion.div 
+                    className="absolute w-24 h-24 bg-accent/10 rounded-full"
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      x: [0, 50, 0],
+                      y: [0, 50, 0],
+                    }}
+                    transition={{
+                      duration: 12,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  />
+                  
+                  {/* Central icon */}
+                  <div className="relative z-10 bg-background rounded-full p-6 shadow-lg">
+                    <span className="text-5xl">{personas[activePersona].icon}</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

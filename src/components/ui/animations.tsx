@@ -452,6 +452,7 @@ export function AnimatedCounter({
   const springValue = useSpring(motionValue, springConfig);
   const displayValue = useTransform(springValue, (latest) => Math.floor(latest));
   
+  // This effect is needed for the animation system
   useState(() => {
     motionValue.set(value);
   });
@@ -467,15 +468,16 @@ export function AnimatedGradientText({
   children,
   className,
   colors = ["hsl(var(--primary))", "hsl(var(--accent))"],
-  duration = 3,
   animate = true,
 }: {
   children: React.ReactNode;
   className?: string;
   colors?: string[];
-  duration?: number;
   animate?: boolean;
 }) {
+  // Animation duration is set internally
+  const animationDuration = 3;
+  
   const gradientText = {
     backgroundSize: "300% 300%",
     backgroundClip: "text",
@@ -488,7 +490,7 @@ export function AnimatedGradientText({
     ? {
         backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         transition: {
-          duration,
+          duration: animationDuration,
           repeat: Infinity,
           repeatType: "loop",
           ease: "linear",

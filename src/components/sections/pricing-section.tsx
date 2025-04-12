@@ -6,7 +6,6 @@ import { Check } from "lucide-react";
 
 export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
-  const [activeCard, setActiveCard] = useState<number | null>(null);
   
   const plans = [
     {
@@ -60,11 +59,13 @@ export default function PricingSection() {
   ];
   
   const handleMouseEnter = (index: number) => {
-    setActiveCard(index);
+    // This function is used for future enhancements
+    console.log(`Mouse entered card ${index}`);
   };
   
   const handleMouseLeave = () => {
-    setActiveCard(null);
+    // This function is used for future enhancements
+    console.log("Mouse left card");
   };
   
   return (

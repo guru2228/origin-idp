@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 interface AnimatedCardProps {
   children: React.ReactNode;
   className?: string;
-  depth?: number;
   hoverScale?: number;
   rotateIntensity?: number;
   shadowIntensity?: number;
@@ -17,7 +16,6 @@ interface AnimatedCardProps {
 export function AnimatedCard({
   children,
   className,
-  depth = 1,
   hoverScale = 1.05,
   rotateIntensity = 15,
   shadowIntensity = 0.5,

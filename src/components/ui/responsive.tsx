@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface ResponsiveContainerProps {
   children: React.ReactNode;
@@ -175,7 +176,7 @@ export function ResponsiveHide({
   hideOn = {},
   as: Component = "div",
 }: ResponsiveHideProps) {
-  // @ts-expect-error - hideOn is a valid prop
+  // Using hideOn object to determine visibility classes
   const hideClasses = cn(
     hideOn.default && "hidden",
     hideOn.sm && "sm:hidden",
@@ -278,7 +279,7 @@ export function ResponsiveImage({
   objectFit = "cover",
   animate = false,
 }: ResponsiveImageProps) {
-  // @ts-expect-error - width is a valid prop
+  // Using width object to determine responsive width classes
   const imageClasses = cn(
     `w-${width.default}`,
     width.sm && `sm:w-${width.sm}`,
@@ -293,16 +294,29 @@ export function ResponsiveImage({
 
   if (animate) {
     return (
-      <motion.img
-        src={src}
-        alt={alt}
-        className={imageClasses}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-      />
+      >
+        <Image 
+          src={src} 
+          alt={alt} 
+          className={imageClasses}
+          width={500}
+          height={300}
+        />
+      </motion.div>
     );
   }
 
-  return <img src={src} alt={alt} className={imageClasses} />;
+  return (
+    <Image 
+      src={src} 
+      alt={alt} 
+      className={imageClasses}
+      width={500}
+      height={300}
+    />
+  );
 }
