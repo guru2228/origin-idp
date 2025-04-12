@@ -1,12 +1,19 @@
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { db } from "../db";
+import { db } from "@/drizzle/db";
 import { eq } from "drizzle-orm";
-import { users } from "../../../drizzle/schema";
+import { users } from "@/drizzle/schema";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
+  adapter: DrizzleAdapter(db),
   session: {
     strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth/login",
+    signOut: "/auth/logout",
+    error: "/auth/error",
   },
   providers: [
     CredentialsProvider({
@@ -14,75 +21,37 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
-        role: { label: "Role", type: "text" },
       },
-      async authorize(credentials) {
-        // This is a mock implementation for demo purposes
-        // In a real app, you would verify credentials against the database
-        if (!credentials?.email || !credentials?.password || !credentials?.role) {
-          return null;
-        }
-
-        // For demo purposes, we'll use predefined users based on role
-        const demoUsers = {
-          "platform_admin": {
-            id: "1",
-            name: "Platform Admin",
-            email: "admin@origin-idp.com",
-            role: "platform_admin",
-            isPlatformAdmin: true,
-          },
-          "tenant_admin": {
-            id: "2",
-            name: "Tenant Admin",
-            email: "tenant@origin-idp.com",
-            role: "tenant_admin",
-            isPlatformAdmin: false,
-          },
-          "product_owner": {
-            id: "3",
-            name: "Product Owner",
-            email: "product@origin-idp.com",
-            role: "product_owner",
-            isPlatformAdmin: false,
-          },
-          "engineer": {
-            id: "4",
-            name: "Engineer",
-            email: "engineer@origin-idp.com",
-            role: "engineer",
-            isPlatformAdmin: false,
-          },
+      async authorize() {
+        // In a real implementation, this would validate credentials against the database
+        // For demo purposes, we're returning a mock user
+        return {
+          id: "1",
+          name: "Demo User",
+          email: "demo@example.com",
+          image: null,
         };
-
-        const user = demoUsers[credentials.role as keyof typeof demoUsers];
-        
-        if (user && credentials.email === user.email && credentials.password === "password") {
-          return user;
-        }
-
-        return null;
       },
     }),
   ],
   callbacks: {
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.role = token.role as string;
+      }
+
+      return session;
+    },
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
-        token.isPlatformAdmin = user.isPlatformAdmin;
+        token.id = user.id;
+        token.role = "admin"; // In a real app, this would come from the user record
       }
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub as string;
-        session.user.role = token.role as string;
-        session.user.isPlatformAdmin = token.isPlatformAdmin as boolean;
-      }
-      return session;
-    },
-  },
-  pages: {
-    signIn: "/auth/login",
   },
 };

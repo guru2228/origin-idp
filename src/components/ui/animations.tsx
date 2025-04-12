@@ -1,135 +1,19 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useTransform, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface TransitionProps {
-  children: React.ReactNode;
-  className?: string;
-  type?: "fade" | "slide-up" | "slide-down" | "slide-left" | "slide-right" | "scale" | "rotate" | "none";
-  duration?: number;
-  delay?: number;
-  ease?: "linear" | "easeIn" | "easeOut" | "easeInOut" | "circIn" | "circOut" | "circInOut" | "backIn" | "backOut" | "backInOut" | "anticipate";
-  staggerChildren?: number;
-  staggerDirection?: 1 | -1;
-  viewport?: boolean;
-  viewportAmount?: number;
-  viewportOnce?: boolean;
-  repeat?: boolean;
-  repeatType?: "loop" | "reverse" | "mirror";
-  repeatDelay?: number;
-}
-
-export function Transition({
-  children,
-  className,
-  type = "fade",
-  duration = 0.5,
-  delay = 0,
-  ease = "easeOut",
-  staggerChildren = 0.1,
-  staggerDirection = 1,
-  viewport = false,
-  viewportAmount = 0.1,
-  viewportOnce = true,
-  repeat = false,
-  repeatType = "loop",
-  repeatDelay = 0,
-}: TransitionProps) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return <div className={className}>{children}</div>;
-  }
-
-  // Define animation variants based on type
-  const variants = {
-    initial: {
-      opacity: type !== "none" ? 0 : 1,
-      y: type === "slide-up" ? 20 : type === "slide-down" ? -20 : 0,
-      x: type === "slide-left" ? 20 : type === "slide-right" ? -20 : 0,
-      scale: type === "scale" ? 0.95 : 1,
-      rotate: type === "rotate" ? -5 : 0,
-    },
-    animate: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      scale: 1,
-      rotate: 0,
-      transition: {
-        duration,
-        delay,
-        ease,
-        staggerChildren,
-        staggerDirection,
-        repeat: repeat ? Infinity : 0,
-        repeatType,
-        repeatDelay,
-      },
-    },
-    exit: {
-      opacity: type !== "none" ? 0 : 1,
-      y: type === "slide-up" ? -20 : type === "slide-down" ? 20 : 0,
-      x: type === "slide-left" ? -20 : type === "slide-right" ? 20 : 0,
-      scale: type === "scale" ? 0.95 : 1,
-      rotate: type === "rotate" ? 5 : 0,
-      transition: {
-        duration,
-        ease,
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      className={className}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={variants}
-      viewport={viewport ? { amount: viewportAmount, once: viewportOnce } : undefined}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-interface PageTransitionProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function PageTransition({ children, className }: PageTransitionProps) {
-  return (
-    <motion.div
-      className={cn("w-full", className)}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-interface FadeInProps {
+interface AnimationProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
   duration?: number;
-  direction?: "up" | "down" | "left" | "right" | "none";
+  type?: "fade" | "slide" | "scale" | "rotate" | "flip" | "bounce";
+  direction?: "up" | "down" | "left" | "right";
   distance?: number;
   staggerChildren?: number;
   viewport?: boolean;
-  viewportAmount?: number;
-  viewportOnce?: boolean;
+  once?: boolean;
+  amount?: number;
 }
 
 export function FadeIn({
@@ -137,304 +21,453 @@ export function FadeIn({
   className,
   delay = 0,
   duration = 0.5,
-  direction = "up",
-  distance = 20,
-  staggerChildren = 0.1,
+  direction,
+  distance = 50,
   viewport = true,
-  viewportAmount = 0.1,
-  viewportOnce = true,
-}: FadeInProps) {
-  const directionMap = {
-    up: { y: distance },
-    down: { y: -distance },
-    left: { x: distance },
-    right: { x: -distance },
-    none: {},
+  once = true,
+}: AnimationProps) {
+  const getInitialProps = () => {
+    const initial = { opacity: 0 };
+    
+    if (direction === "up") {
+      return { ...initial, y: distance };
+    } else if (direction === "down") {
+      return { ...initial, y: -distance };
+    } else if (direction === "left") {
+      return { ...initial, x: distance };
+    } else if (direction === "right") {
+      return { ...initial, x: -distance };
+    }
+    
+    return initial;
   };
-
-  const variants = {
-    hidden: {
-      opacity: 0,
-      ...directionMap[direction],
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      transition: {
-        duration,
-        delay,
-        staggerChildren,
-      },
-    },
+  
+  const getAnimateProps = () => {
+    const animate = { opacity: 1 };
+    
+    if (direction === "up" || direction === "down") {
+      return { ...animate, y: 0 };
+    } else if (direction === "left" || direction === "right") {
+      return { ...animate, x: 0 };
+    }
+    
+    return animate;
   };
-
+  
   return (
     <motion.div
       className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={viewport ? { amount: viewportAmount, once: viewportOnce } : undefined}
-      variants={variants}
+      initial={getInitialProps()}
+      whileInView={viewport ? getAnimateProps() : undefined}
+      animate={!viewport ? getAnimateProps() : undefined}
+      transition={{
+        duration,
+        delay,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      viewport={viewport ? { once } : undefined}
     >
       {children}
     </motion.div>
   );
 }
 
-interface StaggerContainerProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-  staggerChildren?: number;
-  staggerDirection?: 1 | -1;
-  viewport?: boolean;
-  viewportAmount?: number;
-  viewportOnce?: boolean;
+export function ScaleIn({
+  children,
+  className,
+  delay = 0,
+  duration = 0.5,
+  viewport = true,
+  once = true,
+}: AnimationProps) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={viewport ? { opacity: 1, scale: 1 } : undefined}
+      animate={!viewport ? { opacity: 1, scale: 1 } : undefined}
+      transition={{
+        duration,
+        delay,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      viewport={viewport ? { once } : undefined}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function StaggerContainer({
   children,
   className,
-  delay = 0,
   staggerChildren = 0.1,
-  staggerDirection = 1,
+  delay = 0,
   viewport = true,
-  viewportAmount = 0.1,
-  viewportOnce = true,
-}: StaggerContainerProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: delay,
-        staggerChildren,
-        staggerDirection,
-      },
-    },
-  };
-
-  // Add variants to children
-  const childrenWithVariants = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child as React.ReactElement, {
-        // @ts-ignore - adding variants prop
-        variants: {
-          hidden: { opacity: 0, y: 20 },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.5 },
-          },
-        },
-      });
-    }
-    return child;
-  });
-
+  once = true,
+}: AnimationProps) {
   return (
     <motion.div
       className={className}
       initial="hidden"
-      whileInView="visible"
-      viewport={viewport ? { amount: viewportAmount, once: viewportOnce } : undefined}
-      variants={containerVariants}
+      whileInView={viewport ? "visible" : undefined}
+      animate={!viewport ? "visible" : undefined}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren,
+            delayChildren: delay,
+          },
+        },
+      }}
+      viewport={viewport ? { once } : undefined}
     >
-      {childrenWithVariants}
+      {children}
     </motion.div>
   );
 }
 
-interface HoverEffectProps {
+export function StaggerItem({
+  children,
+  className,
+  type = "fade",
+  direction = "up",
+  distance = 20,
+  duration = 0.5,
+}: Omit<AnimationProps, "delay" | "viewport" | "once" | "staggerChildren">) {
+  const getVariants = () => {
+    if (type === "fade") {
+      const initial = { opacity: 0 };
+      const animate = { opacity: 1 };
+      
+      if (direction === "up") {
+        return {
+          hidden: { ...initial, y: distance },
+          visible: { ...animate, y: 0 },
+        };
+      } else if (direction === "down") {
+        return {
+          hidden: { ...initial, y: -distance },
+          visible: { ...animate, y: 0 },
+        };
+      } else if (direction === "left") {
+        return {
+          hidden: { ...initial, x: distance },
+          visible: { ...animate, x: 0 },
+        };
+      } else if (direction === "right") {
+        return {
+          hidden: { ...initial, x: -distance },
+          visible: { ...animate, x: 0 },
+        };
+      }
+    } else if (type === "scale") {
+      return {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: { opacity: 1, scale: 1 },
+      };
+    } else if (type === "rotate") {
+      return {
+        hidden: { opacity: 0, rotate: -5 },
+        visible: { opacity: 1, rotate: 0 },
+      };
+    } else if (type === "flip") {
+      return {
+        hidden: { opacity: 0, rotateX: 90 },
+        visible: { opacity: 1, rotateX: 0 },
+      };
+    } else if (type === "bounce") {
+      return {
+        hidden: { opacity: 0, y: 50 },
+        visible: { 
+          opacity: 1, 
+          y: 0,
+          transition: {
+            type: "spring",
+            stiffness: 400,
+            damping: 10,
+          }
+        },
+      };
+    }
+    
+    return {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    };
+  };
+  
+  return (
+    <motion.div
+      className={className}
+      variants={getVariants()}
+      transition={{
+        duration,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function PageTransition({
+  children,
+  className,
+}: {
   children: React.ReactNode;
   className?: string;
-  type?: "scale" | "lift" | "glow" | "rotate" | "pulse" | "shake" | "none";
-  scale?: number;
-  lift?: number;
-  rotate?: number;
-  duration?: number;
-  springConfig?: {
-    stiffness?: number;
-    damping?: number;
-    mass?: number;
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function Transition({
+  children,
+  className,
+  type = "fade",
+  direction = "up",
+  distance = 20,
+  duration = 0.5,
+  delay = 0,
+}: AnimationProps) {
+  const getInitialProps = () => {
+    if (type === "fade") {
+      const initial = { opacity: 0 };
+      
+      if (direction === "up") {
+        return { ...initial, y: distance };
+      } else if (direction === "down") {
+        return { ...initial, y: -distance };
+      } else if (direction === "left") {
+        return { ...initial, x: distance };
+      } else if (direction === "right") {
+        return { ...initial, x: -distance };
+      }
+      
+      return initial;
+    } else if (type === "scale") {
+      return { opacity: 0, scale: 0.9 };
+    } else if (type === "rotate") {
+      return { opacity: 0, rotate: -5 };
+    } else if (type === "flip") {
+      return { opacity: 0, rotateX: 90 };
+    } else if (type === "bounce") {
+      return { opacity: 0, y: 50 };
+    }
+    
+    return { opacity: 0 };
   };
+  
+  const getAnimateProps = () => {
+    if (type === "fade") {
+      const animate = { opacity: 1 };
+      
+      if (direction === "up" || direction === "down") {
+        return { ...animate, y: 0 };
+      } else if (direction === "left" || direction === "right") {
+        return { ...animate, x: 0 };
+      }
+      
+      return animate;
+    } else if (type === "scale") {
+      return { opacity: 1, scale: 1 };
+    } else if (type === "rotate") {
+      return { opacity: 1, rotate: 0 };
+    } else if (type === "flip") {
+      return { opacity: 1, rotateX: 0 };
+    } else if (type === "bounce") {
+      return { opacity: 1, y: 0 };
+    }
+    
+    return { opacity: 1 };
+  };
+  
+  const getTransition = () => {
+    if (type === "bounce") {
+      return {
+        duration,
+        delay,
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      };
+    }
+    
+    return {
+      duration,
+      delay,
+      ease: [0.25, 0.1, 0.25, 1],
+    };
+  };
+  
+  return (
+    <motion.div
+      className={cn("", className)}
+      initial={getInitialProps()}
+      animate={getAnimateProps()}
+      transition={getTransition()}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function HoverEffect({
   children,
   className,
   type = "scale",
-  scale = 1.05,
-  lift = -5,
-  rotate = 5,
-  duration = 0.3,
-  springConfig = { stiffness: 300, damping: 15, mass: 1 },
-}: HoverEffectProps) {
-  const getHoverAnimation = () => {
-    switch (type) {
-      case "scale":
-        return { scale };
-      case "lift":
-        return { y: lift };
-      case "glow":
-        return { boxShadow: "0 0 15px 2px rgba(var(--primary-rgb), 0.3)" };
-      case "rotate":
-        return { rotate };
-      case "pulse":
-        return { scale: [1, 1.05, 1] };
-      case "shake":
-        return { x: [0, -5, 5, -5, 5, 0] };
-      case "none":
-        return {};
-      default:
-        return { scale };
+  amount = 1.05,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  type?: "scale" | "lift" | "glow" | "rotate" | "pulse" | "shake";
+  amount?: number;
+}) {
+  const getWhileHoverProps = () => {
+    if (type === "scale") {
+      return { scale: amount };
+    } else if (type === "lift") {
+      return { y: -5 * amount };
+    } else if (type === "glow") {
+      return { 
+        boxShadow: `0 0 ${8 * amount}px rgba(var(--primary-rgb), ${0.5 * amount})`,
+      };
+    } else if (type === "rotate") {
+      return { rotate: 5 * amount };
+    } else if (type === "pulse") {
+      return { 
+        scale: [1, 1 + (0.05 * amount), 1],
+        transition: {
+          duration: 0.8,
+          repeat: Infinity,
+          repeatType: "loop",
+        }
+      };
+    } else if (type === "shake") {
+      return { 
+        x: [0, -5 * amount, 5 * amount, -5 * amount, 5 * amount, 0],
+        transition: {
+          duration: 0.6,
+        }
+      };
     }
+    
+    return { scale: 1.05 };
   };
-
+  
   return (
     <motion.div
       className={className}
-      whileHover={getHoverAnimation()}
-      transition={
-        type === "pulse" || type === "shake"
-          ? { duration, repeat: 1, repeatType: "reverse" }
-          : { type: "spring", ...springConfig }
-      }
+      whileHover={getWhileHoverProps()}
+      transition={{ duration: 0.2 }}
     >
       {children}
     </motion.div>
   );
-}
-
-interface ScrollAnimationProps {
-  children: React.ReactNode;
-  className?: string;
-  animation?: "fade" | "slide" | "scale" | "rotate" | "none";
-  threshold?: number;
-  triggerOnce?: boolean;
-  duration?: number;
-  delay?: number;
 }
 
 export function ScrollAnimation({
   children,
   className,
-  animation = "fade",
-  threshold = 0.1,
-  triggerOnce = true,
+  type = "fade",
+  direction = "up",
+  distance = 50,
   duration = 0.5,
-  delay = 0,
-}: ScrollAnimationProps) {
-  const getAnimationVariants = () => {
-    switch (animation) {
-      case "fade":
-        return {
-          hidden: { opacity: 0 },
-          visible: { opacity: 1 },
-        };
-      case "slide":
-        return {
-          hidden: { opacity: 0, y: 50 },
-          visible: { opacity: 1, y: 0 },
-        };
-      case "scale":
-        return {
-          hidden: { opacity: 0, scale: 0.8 },
-          visible: { opacity: 1, scale: 1 },
-        };
-      case "rotate":
-        return {
-          hidden: { opacity: 0, rotate: -5 },
-          visible: { opacity: 1, rotate: 0 },
-        };
-      case "none":
-        return {
-          hidden: {},
-          visible: {},
-        };
-      default:
-        return {
-          hidden: { opacity: 0 },
-          visible: { opacity: 1 },
-        };
+  amount = 0.2,
+  once = true,
+}: Omit<AnimationProps, "delay" | "staggerChildren" | "viewport">) {
+  // This is needed for the animation system to work correctly
+  // @ts-expect-error - useRef is used for DOM references
+  const ref = useRef<HTMLDivElement>(null);
+  
+  const getInitialProps = () => {
+    if (type === "fade") {
+      const initial = { opacity: 0 };
+      
+      if (direction === "up") {
+        return { ...initial, y: distance };
+      } else if (direction === "down") {
+        return { ...initial, y: -distance };
+      } else if (direction === "left") {
+        return { ...initial, x: distance };
+      } else if (direction === "right") {
+        return { ...initial, x: -distance };
+      }
+      
+      return initial;
+    } else if (type === "scale") {
+      return { opacity: 0, scale: 1 - amount };
+    } else if (type === "rotate") {
+      return { opacity: 0, rotate: -5 * amount };
     }
+    
+    return { opacity: 0 };
   };
-
+  
   return (
     <motion.div
+      ref={ref}
       className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ amount: threshold, once: triggerOnce }}
-      variants={getAnimationVariants()}
-      transition={{ duration, delay }}
+      initial={getInitialProps()}
+      whileInView={{
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotate: 0,
+      }}
+      transition={{
+        duration,
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      viewport={{ once, amount }}
     >
       {children}
     </motion.div>
   );
-}
-
-interface AnimatedCounterProps {
-  value: number;
-  className?: string;
-  duration?: number;
-  delay?: number;
-  prefix?: string;
-  suffix?: string;
-  decimals?: number;
 }
 
 export function AnimatedCounter({
   value,
   className,
   duration = 1,
-  delay = 0,
-  prefix = "",
-  suffix = "",
-  decimals = 0,
-}: AnimatedCounterProps) {
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    let startTime: number;
-    let animationFrame: number;
-
-    const updateValue = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      const currentValue = progress * value;
-      
-      setDisplayValue(currentValue);
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(updateValue);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(updateValue);
-
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [value, duration]);
-
+}: {
+  value: number;
+  className?: string;
+  duration?: number;
+}) {
+  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, springConfig);
+  const displayValue = useTransform(springValue, (latest) => Math.floor(latest));
+  
+  useState(() => {
+    motionValue.set(value);
+  });
+  
   return (
-    <span className={className}>
-      {prefix}
-      {displayValue.toFixed(decimals)}
-      {suffix}
-    </span>
+    <motion.span className={className}>
+      {displayValue}
+    </motion.span>
   );
 }
 
 export function AnimatedGradientText({
   children,
   className,
-  colors = ["from-primary", "via-accent", "to-primary"],
-  duration = 8,
+  colors = ["hsl(var(--primary))", "hsl(var(--accent))"],
+  duration = 3,
   animate = true,
 }: {
   children: React.ReactNode;
@@ -443,19 +476,33 @@ export function AnimatedGradientText({
   duration?: number;
   animate?: boolean;
 }) {
-  const gradientClasses = colors.join(" ");
+  const gradientText = {
+    backgroundSize: "300% 300%",
+    backgroundClip: "text",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
+    backgroundImage: `linear-gradient(90deg, ${colors.join(", ")})`,
+  };
+  
+  const animationProps = animate
+    ? {
+        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+        transition: {
+          duration,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "linear",
+        },
+      }
+    : {};
   
   return (
-    <span
-      className={cn(
-        "bg-clip-text text-transparent bg-gradient-to-r",
-        gradientClasses,
-        animate && "animate-gradient-shift",
-        className
-      )}
-      style={animate ? { backgroundSize: "200% 200%", animationDuration: `${duration}s` } : undefined}
+    <motion.span
+      className={className}
+      style={gradientText}
+      animate={animationProps}
     >
       {children}
-    </span>
+    </motion.span>
   );
 }

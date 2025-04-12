@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code, Database, BarChart3, Cpu, Shield, ChevronDown, Star, Users, Zap } from "lucide-react";
 
@@ -25,7 +25,7 @@ export default function LandingPage() {
   useEffect(() => {
     setMounted(true);
     
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent): void => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
     
@@ -385,504 +385,308 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </motion.div>
-                
-                {/* Floating elements around the UI */}
-                <motion.div
-                  className="absolute -top-6 -right-6 bg-primary/90 text-white px-3 py-1.5 rounded-lg text-sm font-medium shadow-lg"
-                  initial={{ opacity: 0, y: 20, rotate: 5 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{ delay: 1.5, type: "spring" }}
-                  style={{ ...calculateMouseTransform(1.2) }}
-                >
-                  AI-Powered
-                </motion.div>
-                
-                <motion.div
-                  className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium shadow-lg flex items-center gap-1.5"
-                  initial={{ opacity: 0, y: -20, rotate: -5 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{ delay: 1.6, type: "spring" }}
-                  style={{ ...calculateMouseTransform(1.5) }}
-                >
-                  <Star className="h-4 w-4 text-yellow-500" />
-                  Developer Friendly
-                </motion.div>
               </motion.div>
             </div>
-            
-            {/* Scroll indicator */}
-            <motion.div 
-              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2, duration: 1 }}
-            >
-              <motion.p 
-                className="text-sm text-muted-foreground mb-2"
-                animate={{ y: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Scroll to explore
-              </motion.p>
-              <motion.div
-                animate={{ y: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <ChevronDown className="h-5 w-5 text-muted-foreground" />
-              </motion.div>
-            </motion.div>
           </div>
+          
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 2, duration: 0.5 }}
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "loop"
+              }}
+            >
+              <ChevronDown className="h-6 w-6 text-muted-foreground" />
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20" style={{ backgroundColor: 'hsl(var(--background))' }}>
+        <section id="features" className="py-20 bg-muted/30">
           <div className="container px-4 md:px-6">
-            <div className="text-center space-y-4 mb-12">
+            <div className="text-center mb-12">
               <motion.h2 
-                className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
-                initial={{ opacity: 0, y: 20 }}
+                className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl"
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20
+                }}
               >
                 Powerful Features
               </motion.h2>
               <motion.p 
-                className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400"
-                initial={{ opacity: 0, y: 20 }}
+                className="mt-4 text-muted-foreground md:text-xl max-w-[700px] mx-auto"
+                initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.1
+                }}
               >
-                Everything you need to manage your development workflow in one place.
+                Everything you need to streamline your development workflow
               </motion.p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ 
-                  scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
-              >
+            
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  title: "AI-Powered Assistance",
+                  description: "Get intelligent suggestions and automate repetitive tasks with our AI assistant.",
+                  icon: Cpu,
+                  color: "bg-primary/10 text-primary"
+                },
+                {
+                  title: "Component Catalog",
+                  description: "Discover, share, and reuse components across your organization.",
+                  icon: Database,
+                  color: "bg-accent/10 text-accent"
+                },
+                {
+                  title: "Workspace Management",
+                  description: "Organize your projects and collaborate with your team in dedicated workspaces.",
+                  icon: Users,
+                  color: "bg-success/10 text-success"
+                },
+                {
+                  title: "Integrated Analytics",
+                  description: "Track performance metrics and gain insights into your development process.",
+                  icon: BarChart3,
+                  color: "bg-warning/10 text-warning"
+                },
+                {
+                  title: "Code Generation",
+                  description: "Generate boilerplate code and accelerate your development workflow.",
+                  icon: Code,
+                  color: "bg-info/10 text-info"
+                },
+                {
+                  title: "Security Compliance",
+                  description: "Ensure your code meets security standards with automated checks.",
+                  icon: Shield,
+                  color: "bg-destructive/10 text-destructive"
+                }
+              ].map((feature, i) => (
                 <motion.div 
-                  className="p-3 rounded-full" 
-                  style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}
+                  key={feature.title}
+                  className="relative overflow-hidden rounded-lg border bg-background p-6"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1 * i
+                  }}
                   whileHover={{ 
-                    scale: 1.1,
-                    backgroundColor: 'hsla(var(--primary), 0.2)' 
+                    y: -5,
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)"
                   }}
                 >
-                  <Database className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
+                  <div className={`w-12 h-12 rounded-full ${feature.color} flex items-center justify-center mb-4`}>
+                    <feature.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </motion.div>
-                <h3 className="text-xl font-bold">Platform Catalog</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Manage your components, systems, domains, and APIs in a centralized catalog.
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                whileHover={{ 
-                  scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
-              >
-                <motion.div 
-                  className="p-3 rounded-full" 
-                  style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}
-                  whileHover={{ 
-                    scale: 1.1,
-                    backgroundColor: 'hsla(var(--primary), 0.2)' 
-                  }}
-                >
-                  <Cpu className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
-                </motion.div>
-                <h3 className="text-xl font-bold">AI Studio</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Build and deploy AI agents, RAG pipelines, and vector stores with ease.
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                whileHover={{ 
-                  scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
-              >
-                <motion.div 
-                  className="p-3 rounded-full" 
-                  style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}
-                  whileHover={{ 
-                    scale: 1.1,
-                    backgroundColor: 'hsla(var(--primary), 0.2)' 
-                  }}
-                >
-                  <Code className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
-                </motion.div>
-                <h3 className="text-xl font-bold">Spectrum AI SDLC</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Accelerate your development lifecycle with AI-powered tools for planning, coding, and testing.
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                whileHover={{ 
-                  scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
-              >
-                <motion.div 
-                  className="p-3 rounded-full" 
-                  style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}
-                  whileHover={{ 
-                    scale: 1.1,
-                    backgroundColor: 'hsla(var(--primary), 0.2)' 
-                  }}
-                >
-                  <BarChart3 className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
-                </motion.div>
-                <h3 className="text-xl font-bold">Engineering Metrics</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Track and visualize key engineering metrics to improve team performance.
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                whileHover={{ 
-                  scale: 1.03,
-                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                }}
-                className="flex flex-col items-center text-center space-y-4 p-6 border rounded-lg"
-              >
-                <motion.div 
-                  className="p-3 rounded-full" 
-                  style={{ backgroundColor: 'hsla(var(--primary), 0.1)' }}
-                  whileHover={{ 
-                    scale: 1.1,
-                    backgroundColor: 'hsla(var(--primary), 0.2)' 
-                  }}
-                >
-                  <Shield className="h-6 w-6" style={{ color: 'hsl(var(--primary))' }} />
-                </motion.div>
-                <h3 className="text-xl font-bold">Multi-Tenant Security</h3>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Secure your platform with role-based access control and tenant isolation.
-                </p>
-              </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Benefits Section */}
-        <section id="benefits" className="py-20 relative overflow-hidden" style={{ backgroundColor: 'hsl(var(--muted))' }}>
-          {/* Animated background elements */}
-          <div className="absolute inset-0 z-0">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full bg-primary/5"
-                style={{
-                  width: `${Math.random() * 500 + 200}px`,
-                  height: `${Math.random() * 500 + 200}px`,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                initial={{ scale: 0.8 }}
-                animate={{ 
-                  scale: [0.8, 1.2, 0.8],
-                  x: [0, Math.random() * 50 - 25, 0],
-                  y: [0, Math.random() * 50 - 25, 0],
-                }}
-                transition={{ 
-                  duration: Math.random() * 10 + 15,
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
-          </div>
-          
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="text-center space-y-4 mb-12">
-              <motion.h2 
-                className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                Why Choose Origin
-              </motion.h2>
-              <motion.p 
-                className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                Transform your development workflow with our AI-powered platform.
-              </motion.p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <section id="benefits" className="py-20">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-12 lg:grid-cols-2 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="space-y-6"
+                transition={{ 
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20
+                }}
               >
-                {[
-                  {
-                    title: "Increased Developer Productivity",
-                    description: "Streamline workflows and reduce context switching with our integrated platform."
-                  },
-                  {
-                    title: "Accelerated Development Cycles",
-                    description: "Leverage AI to automate repetitive tasks and accelerate your development cycles."
-                  },
-                  {
-                    title: "Improved Collaboration",
-                    description: "Foster collaboration between teams with shared workspaces and knowledge bases."
-                  }
-                ].map((item, i) => (
-                  <motion.div 
-                    key={i}
-                    className="space-y-2"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.1 * i }}
-                    whileHover={{ x: 5 }}
-                  >
-                    <h3 className="text-2xl font-bold">{item.title}</h3>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      {item.description}
-                    </p>
-                  </motion.div>
-                ))}
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-6">
+                  Accelerate Your Development
+                </h2>
+                <p className="text-muted-foreground md:text-xl mb-8">
+                  Our platform helps you build faster, collaborate better, and deliver higher quality software.
+                </p>
+                
+                <div className="space-y-4">
+                  {[
+                    "Reduce development time by up to 40%",
+                    "Improve code quality and consistency",
+                    "Enhance team collaboration and knowledge sharing",
+                    "Streamline onboarding for new team members"
+                  ].map((benefit, i) => (
+                    <motion.div 
+                      key={i}
+                      className="flex items-start gap-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 * i }}
+                    >
+                      <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-4 w-4 text-primary"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <p>{benefit}</p>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
+              
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                className="relative"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="mx-auto w-full max-w-[500px] lg:max-w-none perspective-1000"
+                transition={{ 
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.2
+                }}
               >
-                <motion.div 
-                  className="aspect-square overflow-hidden rounded-xl border shadow-xl relative"
-                  style={{ 
-                    backgroundColor: 'hsl(var(--background))',
-                    transformStyle: "preserve-3d"
-                  }}
-                  whileHover={{ 
-                    rotateY: 5,
-                    rotateX: -5,
-                    scale: 1.02,
-                    boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-background" />
+                <div className="relative aspect-video overflow-hidden rounded-xl border shadow-xl bg-background">
+                  {/* 3D AI Visualization */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
                   
                   <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
-                      className="relative"
+                      className="relative w-48 h-48"
+                      animate={{ 
+                        rotate: 360
+                      }}
+                      transition={{ 
+                        duration: 20,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
                     >
-                      <motion.div 
-                        className="absolute -inset-4 rounded-full bg-primary/10"
+                      {[...Array(8)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-3 h-3 rounded-full bg-primary/70"
+                          style={{ 
+                            left: "50%",
+                            top: "50%",
+                            transform: `rotate(${i * 45}deg) translateY(-80px) translateX(-50%)`,
+                          }}
+                          animate={{ 
+                            scale: [1, 1.5, 1],
+                            opacity: [0.7, 1, 0.7]
+                          }}
+                          transition={{ 
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: i * 0.2,
+                            repeatType: "reverse"
+                          }}
+                        />
+                      ))}
+                      
+                      <motion.div
+                        className="absolute left-1/2 top-1/2 w-24 h-24 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 flex items-center justify-center"
                         animate={{ 
                           scale: [1, 1.1, 1],
                         }}
                         transition={{ 
-                          duration: 3,
+                          duration: 4,
                           repeat: Infinity,
-                          repeatType: "loop"
+                          repeatType: "reverse"
                         }}
-                      />
-                      <motion.div 
-                        className="text-5xl md:text-6xl font-bold text-primary"
-                        animate={{ 
-                          rotateY: [0, 360],
-                        }}
-                        transition={{ 
-                          duration: 20,
-                          repeat: Infinity,
-                          repeatType: "loop",
-                          ease: "linear"
-                        }}
-                        style={{ transformStyle: "preserve-3d" }}
                       >
-                        AI
+                        <motion.div
+                          className="w-16 h-16 rounded-full bg-primary/30 flex items-center justify-center"
+                          animate={{ 
+                            scale: [1, 1.15, 1],
+                          }}
+                          transition={{ 
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            delay: 0.5
+                          }}
+                        >
+                          <motion.div
+                            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white"
+                            animate={{ 
+                              scale: [1, 1.2, 1],
+                            }}
+                            transition={{ 
+                              duration: 2,
+                              repeat: Infinity,
+                              repeatType: "reverse",
+                              delay: 1
+                            }}
+                          >
+                            <Cpu className="h-5 w-5" />
+                          </motion.div>
+                        </motion.div>
                       </motion.div>
                     </motion.div>
                   </div>
                   
-                  {/* Floating elements */}
-                  {[
-                    { icon: Code, position: "top-10 left-10", delay: 0.5 },
-                    { icon: Database, position: "top-10 right-10", delay: 0.7 },
-                    { icon: Cpu, position: "bottom-10 left-10", delay: 0.9 },
-                    { icon: BarChart3, position: "bottom-10 right-10", delay: 1.1 },
-                  ].map((item, i) => (
+                  {/* Floating icons */}
+                  {[Code, Database, BarChart3, Shield].map((Icon, i) => (
                     <motion.div
                       key={i}
-                      className={`absolute ${item.position} p-3 rounded-full bg-background/80 backdrop-blur shadow-lg`}
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: item.delay, type: "spring" }}
-                      whileHover={{ scale: 1.1 }}
+                      className="absolute w-10 h-10 rounded-full bg-background shadow-lg flex items-center justify-center"
+                      style={{ 
+                        left: `${20 + (i * 20)}%`,
+                        top: `${20 + ((i % 2) * 50)}%`,
+                      }}
+                      animate={{ 
+                        y: [0, -10, 0],
+                      }}
+                      transition={{ 
+                        duration: 3 + i,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        delay: i * 0.5
+                      }}
                     >
-                      <item.icon className="h-6 w-6 text-primary" />
+                      <Icon className="h-5 w-5 text-primary" />
                     </motion.div>
                   ))}
-                </motion.div>
+                </div>
               </motion.div>
             </div>
           </div>
         </section>
-
-        {/* CTA Section */}
-        <section className="py-20 relative overflow-hidden" style={{ backgroundColor: 'hsl(var(--background))' }}>
-          <div className="container px-4 md:px-6 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col items-center justify-center space-y-4 text-center"
-            >
-              <div className="space-y-2">
-                <motion.h2 
-                  className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                >
-                  Ready to Transform Your Development Workflow?
-                </motion.h2>
-                <motion.p 
-                  className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                >
-                  Get started with Origin today and experience the power of AI-driven development.
-                </motion.p>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="flex flex-col gap-2 min-[400px]:flex-row"
-              >
-                <Link href="/auth/login">
-                  <Button size="lg" className="gap-1.5 relative overflow-hidden group">
-                    <motion.span
-                      className="absolute inset-0 bg-white/20 rounded-md"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.5 }}
-                    />
-                    Get Started
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </motion.div>
-                  </Button>
-                </Link>
-                <Link href="#features">
-                  <Button size="lg" variant="outline" className="relative overflow-hidden group">
-                    <motion.span
-                      className="absolute inset-0 bg-primary/10 rounded-md"
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileHover={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                    Learn More
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-          
-          {/* Background animation */}
-          <div className="absolute inset-0 z-0 overflow-hidden">
-            <motion.div
-              className="absolute -bottom-1/2 left-1/2 transform -translate-x-1/2 w-[200%] aspect-square rounded-full"
-              style={{
-                background: "radial-gradient(circle, hsla(var(--primary), 0.05) 0%, transparent 70%)",
-              }}
-              animate={{
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 15,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              }}
-            />
-          </div>
-        </section>
       </main>
-
-      {/* Footer */}
-      <motion.footer 
-        className="border-t py-6 md:py-0"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-center text-sm leading-loose text-gray-500 md:text-left">
-            © 2025 Origin. All rights reserved.
-          </p>
-          <div className="flex items-center gap-4">
-            {["Terms", "Privacy", "Contact"].map((item, i) => (
-              <motion.div
-                key={item}
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <Link href="#" className="text-sm font-medium hover-link">
-                  {item}
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.footer>
     </div>
   );
 }

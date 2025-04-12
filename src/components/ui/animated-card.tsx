@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -9,156 +7,108 @@ interface AnimatedCardProps {
   className?: string;
   depth?: number;
   hoverScale?: number;
+  rotateIntensity?: number;
+  shadowIntensity?: number;
+  glareIntensity?: number;
   borderRadius?: string;
-  shadow?: string;
-  backgroundColor?: string;
+  perspective?: number;
 }
 
 export function AnimatedCard({
   children,
   className,
   depth = 1,
-  hoverScale = 1.03,
-  borderRadius = "rounded-lg",
-  shadow = "shadow-lg",
-  backgroundColor = "bg-card",
+  hoverScale = 1.05,
+  rotateIntensity = 15,
+  shadowIntensity = 0.5,
+  glareIntensity = 0.2,
+  borderRadius = "1rem",
+  perspective = 1000,
 }: AnimatedCardProps) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isMounted, setIsMounted] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
-  // Motion values for smooth transitions
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
   
-  // Spring configs for smooth animation
-  const springConfig = { stiffness: 150, damping: 15 };
-  const springX = useSpring(x, springConfig);
-  const springY = useSpring(y, springConfig);
-  const springRotateX = useSpring(rotateX, springConfig);
-  const springRotateY = useSpring(rotateY, springConfig);
+  // We're not using these variables directly in JSX, but they're needed for the animation system
+  // to work correctly with the useSpring hook
+  useSpring(x, { stiffness: 150, damping: 20 });
+  useSpring(y, { stiffness: 150, damping: 20 });
   
-  // Scale on hover with spring physics
-  const scale = useMotionValue(1);
-  const springScale = useSpring(scale, { stiffness: 200, damping: 20 });
+  const rotateX = useTransform(y, [-300, 300], [rotateIntensity, -rotateIntensity]);
+  const rotateY = useTransform(x, [-300, 300], [-rotateIntensity, rotateIntensity]);
   
-  // Shadow based on hover state
-  const boxShadow = useTransform(
-    springScale,
-    [1, hoverScale],
-    [
-      "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-      "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
-    ]
-  );
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isHovered) return;
+    if (!cardRef.current) return;
     
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     
-    // Calculate distance from center (normalized -1 to 1)
-    const rotateXValue = ((e.clientY - centerY) / (rect.height / 2)) * -5 * depth;
-    const rotateYValue = ((e.clientX - centerX) / (rect.width / 2)) * 5 * depth;
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
     
-    rotateX.set(rotateXValue);
-    rotateY.set(rotateYValue);
-    
-    // Update mouse position for potential parallax effects inside card
-    setMousePosition({
-      x: (e.clientX - centerX) / rect.width,
-      y: (e.clientY - centerY) / rect.height
-    });
+    setMousePosition({ x: mouseX, y: mouseY });
+    x.set(mouseX);
+    y.set(mouseY);
   };
-
+  
   const handleMouseEnter = () => {
     setIsHovered(true);
-    scale.set(hoverScale);
   };
-
+  
   const handleMouseLeave = () => {
     setIsHovered(false);
-    rotateX.set(0);
-    rotateY.set(0);
-    scale.set(1);
+    x.set(0);
+    y.set(0);
   };
-
-  if (!isMounted) {
-    return <div className={cn("border", borderRadius, shadow, backgroundColor, className)}>{children}</div>;
-  }
-
+  
+  const glarePosition = {
+    x: mousePosition.x / (cardRef.current?.offsetWidth || 1) * 100,
+    y: mousePosition.y / (cardRef.current?.offsetHeight || 1) * 100,
+  };
+  
   return (
     <motion.div
-      className={cn("border overflow-hidden perspective-1000", borderRadius, backgroundColor, className)}
+      ref={cardRef}
+      className={cn("relative overflow-hidden", className)}
       style={{
-        rotateX: springRotateX,
-        rotateY: springRotateY,
-        scale: springScale,
-        boxShadow,
-        transformStyle: "preserve-3d",
-        willChange: "transform, box-shadow"
+        perspective: `${perspective}px`,
+        borderRadius,
       }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      whileHover={{ scale: hoverScale }}
     >
-      {typeof children === 'function' ? children(mousePosition, isHovered) : children}
-    </motion.div>
-  );
-}
-
-export function AnimatedCardContent({
-  children,
-  depth = 0.5,
-  className
-}: {
-  children: React.ReactNode;
-  depth?: number;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      className={cn("relative z-10", className)}
-      style={{
-        transformStyle: "preserve-3d",
-        transform: `translateZ(${depth * 20}px)`
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-export function AnimatedCardBackground({
-  children,
-  depth = -0.5,
-  className
-}: {
-  children: React.ReactNode;
-  depth?: number;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      className={cn("absolute inset-0 z-0", className)}
-      style={{
-        transformStyle: "preserve-3d",
-        transform: `translateZ(${depth * 20}px)`
-      }}
-    >
-      {children}
+      <motion.div
+        className="w-full h-full"
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+          boxShadow: isHovered 
+            ? `0 ${10 * shadowIntensity}px ${20 * shadowIntensity}px rgba(0, 0, 0, ${0.1 * shadowIntensity})` 
+            : "none",
+        }}
+      >
+        {children}
+        
+        {/* Glare effect */}
+        {glareIntensity > 0 && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: isHovered 
+                ? `radial-gradient(circle at ${glarePosition.x}% ${glarePosition.y}%, rgba(255, 255, 255, ${glareIntensity}), transparent 80%)` 
+                : "none",
+              opacity: isHovered ? 1 : 0,
+            }}
+          />
+        )}
+      </motion.div>
     </motion.div>
   );
 }
