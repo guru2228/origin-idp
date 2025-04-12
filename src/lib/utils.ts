@@ -5,6 +5,42 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// User utility functions
+export function getInitials(name: string): string {
+  if (!name) return '';
+  
+  const parts = name.split(' ');
+  if (parts.length === 1) {
+    return name.substring(0, 2).toUpperCase();
+  }
+  
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+export function generateAvatarColor(name: string): string {
+  if (!name) return 'bg-primary text-primary-foreground';
+  
+  // Simple hash function to generate a consistent number from a string
+  const hash = name.split('').reduce((acc, char) => {
+    return acc + char.charCodeAt(0);
+  }, 0);
+  
+  // List of color classes
+  const colorClasses = [
+    'bg-primary text-primary-foreground',
+    'bg-secondary text-secondary-foreground',
+    'bg-accent text-accent-foreground',
+    'bg-muted text-muted-foreground',
+    'bg-primary-200 text-primary-800',
+    'bg-primary-300 text-primary-900',
+    'bg-primary-400 text-primary-950',
+    'bg-accent/80 text-accent-foreground',
+  ];
+  
+  // Use the hash to select a color class
+  return colorClasses[hash % colorClasses.length];
+}
+
 // 3D transform utility functions
 export function create3DTransform(x = 0, y = 0, z = 0, rotateX = 0, rotateY = 0) {
   return `perspective(1000px) translateX(${x}px) translateY(${y}px) translateZ(${z}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;

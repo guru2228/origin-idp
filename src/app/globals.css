@@ -121,7 +121,8 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-style: solid;
+    border-width: 0;
   }
   
   html {
@@ -130,48 +131,105 @@
   }
   
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
   }
   
   h1 {
-    @apply text-4xl font-bold md:text-5xl lg:text-6xl;
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 3rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 3.75rem;
+    }
   }
   
   h2 {
-    @apply text-3xl font-bold md:text-4xl;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h2 {
+      font-size: 2.25rem;
+    }
   }
   
   h3 {
-    @apply text-2xl font-bold md:text-3xl;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h3 {
+      font-size: 1.875rem;
+    }
   }
   
   h4 {
-    @apply text-xl font-bold md:text-2xl;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h4 {
+      font-size: 1.5rem;
+    }
   }
   
   h5 {
-    @apply text-lg font-bold md:text-xl;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h5 {
+      font-size: 1.25rem;
+    }
   }
   
   h6 {
-    @apply text-base font-bold md:text-lg;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  @media (min-width: 768px) {
+    h6 {
+      font-size: 1.125rem;
+    }
   }
   
   p {
-    @apply leading-relaxed;
+    line-height: 1.625;
   }
   
   small {
-    @apply text-sm;
+    font-size: 0.875rem;
   }
   
   .lead {
-    @apply text-xl text-muted-foreground;
+    font-size: 1.25rem;
+    color: hsl(var(--muted-foreground));
   }
 }
 
@@ -202,57 +260,82 @@
 
 /* Gradient Text */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 0.7));
 }
 
 .gradient-text-accent {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-primary;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, hsl(var(--accent)), hsl(var(--primary)));
 }
 
 .gradient-text-success {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-success to-primary;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, hsl(var(--success)), hsl(var(--primary)));
 }
 
 /* Hover Effects */
 .hover-link {
-  @apply relative inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .hover-link::after {
   content: '';
-  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 ease-in-out;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0.125rem;
+  background-color: hsl(var(--primary));
+  transition: all 0.3s ease-in-out;
 }
 
 .hover-link:hover::after {
-  @apply w-full;
+  width: 100%;
 }
 
 /* Card Effects */
 .card-highlight {
-  @apply border border-primary/20 shadow-lg shadow-primary/10;
+  border: 1px solid hsl(var(--primary) / 0.2);
+  box-shadow: 0 10px 15px -3px hsl(var(--primary) / 0.1), 0 4px 6px -4px hsl(var(--primary) / 0.1);
 }
 
 .card-hover {
-  @apply transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1;
+  transition: all 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-0.25rem);
 }
 
 .card-glass {
-  @apply bg-background/80 backdrop-blur-sm border border-border/50;
+  background-color: hsl(var(--background) / 0.8);
+  backdrop-filter: blur(4px);
 }
 
 /* Button Effects */
 .button-glow {
-  @apply relative overflow-hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .button-glow::before {
   content: '';
-  @apply absolute inset-0 bg-white/20 rounded-md -translate-x-full;
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  transform: translateX(-100%);
   transition: transform 0.5s ease-in-out;
 }
 
 .button-glow:hover::before {
-  @apply translate-x-0;
+  transform: translateX(0);
 }
 
 /* Custom CSS for responsive design and content density */
@@ -405,12 +488,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsla(215, 16%, 47%, 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsla(215, 16%, 47%, 0.5);
 }
 
 /* Print styles */
